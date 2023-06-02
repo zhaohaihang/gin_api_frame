@@ -1,0 +1,31 @@
+[server]
+run_mode = "debug"
+server_host = "0.0.0.0"
+server_port = ":4000"
+
+[mysql]
+db = "mysql"
+#db_host = "127.0.0.1"
+db_host = "gin_api_frame_mysql"
+db_port = "3306"
+db_user = "root"
+db_password = "123456"
+db_name = "gin_api_frame_db"
+
+[redis]
+redis_db = "redis"
+#redis_addr = "127.0.0.1:6379"
+redis_addr = "gin_api_frame_redis:6379"
+redis_pw = ""
+
+[qiniu]
+access_key = "***"
+serect_key = "***"
+bucket = "***"
+domain = "***"
+
+[mail]
+mail_username = "*******@qq.com"
+mail_passwd = "********"
+mail_host = "mtp.qq.com"
+mail_address = "smtp.qq.com:25"

@@ -1,0 +1,36 @@
+version: '3.3'
+
+services:
+  civil:
+    build: ./
+    image: gin_api_frame:0.4
+    container_name: gin_api_frame
+    restart: always
+    environment:
+      MYSQL_DSN: "root:root@tcp/gin_api_frame_db?charset=utf8&parseTime=True&loc=Local"
+    ports:
+      - 4000:4000
+    depends_on:
+      - mysql
+      - redis
+
+  mysql:
+    container_name: gin_api_frame_mysql
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: gin_api_frame_db
+    volumes:
+      - /var/lib/mysql/gin_api_frame_mysql:/var/lib/mysql
+    ports:
+      - 3306:3306
+  
+  redis:
+    container_name: gin_api_frame_redis
+    image: redis:6.0
+    restart: always
+    volumes:
+      - /usr/local/redis:/usr/local/redis
+    ports:
+      - 6379:6379

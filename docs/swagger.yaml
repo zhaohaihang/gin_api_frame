@@ -1,0 +1,281 @@
+basePath: /api/v1
+definitions:
+  model.Point:
+    properties:
+      lat:
+        type: number
+      lng:
+        type: number
+    type: object
+  serializer.ChangePasswdInfo:
+    properties:
+      new_passwd:
+        maxLength: 20
+        minLength: 8
+        type: string
+      old_passwd:
+        maxLength: 20
+        minLength: 8
+        type: string
+      re_passwd:
+        maxLength: 20
+        minLength: 8
+        type: string
+    required:
+    - new_passwd
+    - old_passwd
+    - re_passwd
+    type: object
+  serializer.LoginUserInfo:
+    properties:
+      password:
+        maxLength: 20
+        minLength: 8
+        type: string
+      type:
+        enum:
+        - 1
+        - 2
+        type: integer
+      user_name:
+        type: string
+    required:
+    - password
+    - type
+    - user_name
+    type: object
+  serializer.Point:
+    properties:
+      lat:
+        type: number
+      lng:
+        type: number
+    type: object
+  serializer.Response:
+    properties:
+      data: {}
+      error:
+        type: string
+      msg:
+        type: string
+      status:
+        type: integer
+    type: object
+  serializer.TokenData:
+    properties:
+      token:
+        type: string
+      user: {}
+    type: object
+  serializer.UpdateUserInfo:
+    properties:
+      address:
+        maxLength: 1000
+        type: string
+      biography:
+        maxLength: 1000
+        type: string
+      email:
+        type: string
+      extra:
+        maxLength: 1000
+        type: string
+      location:
+        $ref: '#/definitions/serializer.Point'
+      phone:
+        type: string
+    type: object
+  serializer.User:
+    properties:
+      address:
+        type: string
+      avatar:
+        type: string
+      biography:
+        type: string
+      email:
+        type: string
+      extra:
+        type: string
+      id:
+        type: integer
+      lastLogin:
+        type: integer
+      location:
+        $ref: '#/definitions/model.Point'
+      phone:
+        type: string
+      status:
+        type: string
+      username:
+        type: string
+    type: object
+externalDocs:
+  description: OpenAPI
+  url: https://swagger.io/resources/open-api/
+host: localhost:4000
+info:
+  contact:
+    email: 1932859223@qq.com
+    name: Zhao Haihang
+    url: http://www.swagger.io/support
+  description: The api docs of JI project
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: JI API
+  version: "1.0"
+paths:
+  /api/v1/user:
+    put:
+      consumes:
+      - application/json
+      description: 用户更新信息接口
+      parameters:
+      - description: Authorization header parameter
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: user update info
+        in: body
+        name: UpdateUserInfo
+        required: true
+        schema:
+          $ref: '#/definitions/serializer.UpdateUserInfo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/serializer.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/serializer.User'
+              type: object
+      summary: 用户更新信息
+      tags:
+      - user
+  /api/v1/user/{uid}:
+    get:
+      consumes:
+      - application/json
+      description: 查看用户信息接口
+      parameters:
+      - description: Authorization header parameter
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: user ID
+        in: path
+        name: uid
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/serializer.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/serializer.User'
+              type: object
+      summary: 查看用户信息
+      tags:
+      - user
+  /api/v1/user/avatar:
+    put:
+      consumes:
+      - multipart/form-data
+      description: 上传用户头像接口
+      parameters:
+      - description: 图片文件
+        in: formData
+        name: file
+        required: true
+        type: file
+      - description: Authorization header parameter
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/serializer.Response'
+      summary: 上传用户头像
+      tags:
+      - user
+  /api/v1/user/changepasswd:
+    put:
+      consumes:
+      - application/json
+      description: 用户修改密码接口
+      parameters:
+      - description: Authorization header parameter
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: user changeinfo info
+        in: body
+        name: ChangePasswdInfo
+        required: true
+        schema:
+          $ref: '#/definitions/serializer.ChangePasswdInfo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/serializer.Response'
+      summary: 修改密码
+      tags:
+      - user
+  /api/v1/user/login:
+    post:
+      consumes:
+      - application/json
+      description: 用户登录接口，如果用户不存在则创建用户
+      parameters:
+      - description: login user info
+        in: body
+        name: LoginUserInfo
+        required: true
+        schema:
+          $ref: '#/definitions/serializer.LoginUserInfo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/serializer.Response'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/serializer.TokenData'
+                  - properties:
+                      user:
+                        $ref: '#/definitions/serializer.User'
+                    type: object
+              type: object
+      summary: 用户登录
+      tags:
+      - user
+securityDefinitions:
+  BasicAuth:
+    type: basic
+swagger: "2.0"

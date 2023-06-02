@@ -1,0 +1,12 @@
+package consts
+
+const (
+	LOGIN_TYPE_EMAIL = iota
+	LOGIN_TYPE_PHONE
+)
+
+const (
+	ACTIVITY_STATUS_NOSTART = iota
+	ACTIVITY_STATUS_INPROCESS
+	ACTIVITY_STATUS_ENDED 
+)
